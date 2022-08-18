@@ -2,12 +2,31 @@ const express = require("express");
 const Comment = require("../models/comments");
 const router = express.Router();
 
-// comments POST
-router.post("/comment-create", async (req, res, next) => {
+// comments GET
+router.get("/get", async (req, res, next) => {
   try {
-    const newComment = await Question.create({
-      questionType: req.body.questionType,
-      writer: req.body.writer,
+    const comments = await Comment.find({
+      _id: req.body._id,
+    });
+    console.log(comments);
+    const resObject = {
+      status: "success",
+      result: comments,
+    };
+    res.json(resObject);
+  } catch (err) {
+    console.error(err);
+    res.json({ status: "fail" });
+    next(err);
+  }
+});
+
+// comments POST
+router.post("/create", async (req, res, next) => {
+  try {
+    const newComment = await Comment.create({
+      questionId: req.body.questionId,
+      writer: req.body.writerId,
       content: req.body.content,
       likes: [],
     });

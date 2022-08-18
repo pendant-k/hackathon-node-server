@@ -44,7 +44,7 @@ app.use("/test", testRouter);
 app.use("/questions", questionsRouter);
 
 // comments route
-app.use("/questions", commentsRouter);
+app.use("/comments", commentsRouter);
 
 // server - db connection
 // config/dbConnect 참고

@@ -86,24 +86,4 @@ router.get("/logout", function (req, res) {
   res.json({ status: "success" });
 });
 
-// questions POST
-router.post("/question-create", async (req, res, next) => {
-  try {
-    const newQuestion = await Question.create({
-      writer: req.body.writer,
-      questionType: req.body.questionType,
-      title: req.body.title,
-      content: req.body.content,
-      comments: req.body.comments,
-      pros: req.body.pros,
-      cons: req.body.cons,
-    });
-    console.log("Question created : ", newQuestion);
-    res.status(201).json(newQuestion);
-  } catch (err) {
-    console.error(err);
-    next(err);
-  }
-});
-
 module.exports = router;
