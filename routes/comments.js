@@ -76,4 +76,38 @@ router
     }
   });
 
+// like PATCH
+router.route("/like/:id").patch(async (req, res, next) => {
+  try {
+    const result = await Comment.updateOne(
+      {
+        _id: req.params.id,
+      },
+      { $push: { likes: req.body.userId } }
+    );
+    console.log(result);
+    res.json({ status: "success" });
+  } catch (err) {
+    console.error(err);
+    res.json({ status: "fail" });
+  }
+});
+
+// unlike PATCH
+router.route("/unlike/:id").patch(async (req, res, next) => {
+  try {
+    const result = await Comment.findOneAndUpdate(
+      {
+        _id: req.params.id,
+      },
+      { $pull: { likes: req.body.userId } }
+    );
+    console.log(result);
+    res.json({ status: "success" });
+  } catch (err) {
+    console.error(err);
+    res.json({ status: "fail" });
+  }
+});
+
 module.exports = router;
