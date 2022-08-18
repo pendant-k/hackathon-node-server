@@ -8,32 +8,32 @@ const router = express.Router();
 // axios.patch(`/questions/${question._id}`);
 // axios.delete(`/questions/${question_id}`);
 router
-    .route("/:id")
-    .patch(async (req, res, next) => {
-        try {
-            const result = await Question.updateOne(
-                {
-                    _id: req.params.id,
-                },
-                {
-                    title: req.body.title,
-                    content: req.body.comment,
-                }
-            );
-            console.log(result);
-            res.json({ status: "success" });
-        } catch (err) {
-            console.error(err);
-            res.json({ status: "fail" });
+  .route("/:id")
+  .patch(async (req, res, next) => {
+    try {
+      const result = await Question.updateOne(
+        {
+          _id: req.params.id,
+        },
+        {
+          title: req.body.title,
+          content: req.body.content,
         }
-    })
-    .delete(async (req, res, next) => {
-        try {
-            // delete Question Schema
-            const result = await Question.findOneAndDelete;
-        } catch (err) {
-            console.error(err);
-        }
-    });
+      );
+      console.log(result);
+      res.json({ status: "success" });
+    } catch (err) {
+      console.error(err);
+      res.json({ status: "fail" });
+    }
+  })
+  .delete(async (req, res, next) => {
+    try {
+      // delete Question Schema
+      const result = await Question.findOneAndDelete;
+    } catch (err) {
+      console.error(err);
+    }
+  });
 
 module.exports = router;
