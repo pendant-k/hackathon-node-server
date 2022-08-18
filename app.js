@@ -16,6 +16,7 @@ const connectDB = require("./config/dbConnect");
 const testRouter = require("./routes/test");
 const questionsRouter = require("./routes/questions");
 const commentsRouter = require("./routes/comments");
+const votesRouter = require("./routes/votes");
 
 // connect DB
 connectDB();
@@ -34,7 +35,7 @@ app.use(cors({ origin: "*" }));
 // connection test route
 // index path
 app.get("/", (req, res) => {
-  res.send("index route");
+    res.send("index route");
 });
 
 // test route
@@ -44,15 +45,17 @@ app.use("/test", testRouter);
 app.use("/questions", questionsRouter);
 
 // comments route
-app.use("/questions", commentsRouter);
+app.use("/comments", commentsRouter);
+
+app.use("/votes", votesRouter);
 
 // server - db connection
 // config/dbConnect 참고
 mongoose.connection.once("open", () => {
-  console.log("DB Connected!");
-  app.listen(PORT, () =>
-    console.log(`Server is running on http://localhost:${PORT}`)
-  );
+    console.log("DB Connected!");
+    app.listen(PORT, () =>
+        console.log(`Server is running on http://localhost:${PORT}`)
+    );
 });
 
 // server start command : npm run start
