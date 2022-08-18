@@ -14,6 +14,7 @@ const connectDB = require("./config/dbConnect");
 
 // router
 const testRouter = require("./routes/test");
+const questionsRouter = require("./routes/questions");
 
 // connect DB
 connectDB();
@@ -35,8 +36,11 @@ app.get("/", (req, res) => {
     res.send("index route");
 });
 
-// test router
+// test route
 app.use("/test", testRouter);
+
+// questions route
+app.use("/questions", questionsRouter);
 
 // server - db connection
 // config/dbConnect 참고
