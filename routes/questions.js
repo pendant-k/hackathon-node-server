@@ -29,6 +29,8 @@ router
     })
     .delete(async (req, res, next) => {
         try {
+            // delete Question Schema
+            const result = await Question.findOneAndDelete;
         } catch (err) {
             console.error(err);
         }
