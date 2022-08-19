@@ -17,6 +17,7 @@ const testRouter = require("./routes/test");
 const questionsRouter = require("./routes/questions");
 const commentsRouter = require("./routes/comments");
 const votesRouter = require("./routes/votes");
+const usersRouter = require("./routes/users");
 
 // connect DB
 connectDB();
@@ -40,6 +41,9 @@ app.get("/", (req, res) => {
 
 // test route
 app.use("/test", testRouter);
+
+// users route
+app.use("/users", usersRouter);
 
 // questions route
 app.use("/questions", questionsRouter);
