@@ -4,23 +4,23 @@ const Question = require("../models/questions");
 const router = express.Router();
 
 // comment GET
-router.get("/get", async (req, res, next) => {
-    try {
-        const comment = await Comment.findOne({
-            _id: req.body._id,
-        });
-        console.log(comment);
-        // const resObject = {
-        //   status: "success",
-        //   result: comment,
-        // };
-        res.json(comment);
-    } catch (err) {
-        console.error(err);
-        res.json({ status: "fail" });
-        next(err);
-    }
-});
+// router.get("/get", async (req, res, next) => {
+//     try {
+//         const comment = await Comment.findOne({
+//             _id: req.body._id,
+//         });
+//         console.log(comment);
+//         // const resObject = {
+//         //   status: "success",
+//         //   result: comment,
+//         // };
+//         res.json(comment);
+//     } catch (err) {
+//         console.error(err);
+//         res.json({ status: "fail" });
+//         next(err);
+//     }
+// });
 
 // all comments of one question GET
 // need questionId
@@ -56,7 +56,7 @@ router.post("/create", async (req, res, next) => {
 
         console.log("Comment created : ", newComment);
         // insert new comment to Question
-        refQuestion = await Question.findOneAndUpdate(
+        const refQuestion = await Question.findOneAndUpdate(
             {
                 _id: req.body.questionId,
             },
@@ -81,6 +81,23 @@ router.post("/create", async (req, res, next) => {
 // axios.delete(`/comments/${comment._id}`);
 router
     .route("/:id")
+    .get(async (req, res, next) => {
+        try {
+            const comment = await Comment.findOne({
+                _id: req.params.id,
+            });
+            console.log(comment);
+            const resObject = {
+                status: "success",
+                result: comment,
+            };
+            res.json(resObject);
+        } catch (err) {
+            console.error(err);
+            res.json({ status: "fail" });
+            next(err);
+        }
+    })
     .patch(async (req, res, next) => {
         try {
             const result = await Comment.updateOne(
