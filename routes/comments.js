@@ -2,11 +2,30 @@ const express = require("express");
 const Comment = require("../models/comments");
 const router = express.Router();
 
-// comments GET
+// comment GET
 router.get("/get", async (req, res, next) => {
   try {
-    const comments = await Comment.find({
+    const comment = await Comment.findOne({
       _id: req.body._id,
+    });
+    console.log(comment);
+    const resObject = {
+      status: "success",
+      result: comment,
+    };
+    res.json(resObject);
+  } catch (err) {
+    console.error(err);
+    res.json({ status: "fail" });
+    next(err);
+  }
+});
+
+// all comments GET
+router.get("/get-all", async (req, res, next) => {
+  try {
+    const comments = await Comment.find({
+      questionId: req.body.questionId,
     });
     console.log(comments);
     const resObject = {
