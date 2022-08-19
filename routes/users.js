@@ -19,7 +19,7 @@ router.get("/check-name/:name", async (req, res, next) => {
 
 // create newUser
 router.post("/create", async (req, res, next) => {
-    const existUser = await User.findOne({ userId: req.body.userId });
+    const existUser = await User.findOne({ username: req.body.username });
     if (existUser) {
         console.log("Exist User : ");
         console.log(existUser);
