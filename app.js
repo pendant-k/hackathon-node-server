@@ -28,7 +28,7 @@ const expressSession = require("express-session")({
 });
 
 // connect DB
-출처: https: connectDB();
+connectDB();
 
 const app = express();
 
