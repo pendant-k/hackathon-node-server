@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 const User = require("../models/users");
+const { createToken } = require("../controllers/userController");
+const verifyToken = require("../middlewares/auth");
 
 // duplicated check
 router.get("/check-name/:name", async (req, res, next) => {
@@ -25,10 +27,9 @@ router.post("/create", async (req, res, next) => {
     } else {
         try {
             const newUser = await User.create({
-                name: req.body.name,
                 nickname: req.body.nickname,
                 email: req.body.email,
-                userId: req.body.userId,
+                username: req.body.username,
                 password: req.body.password,
                 bookmark: [],
             });
@@ -38,6 +39,21 @@ router.post("/create", async (req, res, next) => {
             console.error(err);
             next(err);
         }
+    }
+});
+
+router.post("/login", createToken);
+
+router.get("/current", verifyToken, async (req, res, next) => {
+    try {
+        const currentUser = await User.findOne({
+            username: res.locals.username,
+        });
+        console.log(currentUser);
+        res.json({ ...currentUser, status: "success" });
+    } catch (err) {
+        console.error(err);
+        res.json({ status: "fail" });
     }
 });
 

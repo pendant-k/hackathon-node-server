@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/users");
 const Question = require("../models/questions");
+const verifyToken = require("../middlewares/auth");
 
 // TIME LOGGER
 router.use((req, res, next) => {
@@ -42,6 +43,16 @@ router.post("/user-create", async (req, res, next) => {
             console.error(err);
             next(err);
         }
+    }
+});
+
+router.get("/token", verifyToken, async (req, res, next) => {
+    try {
+        const result = res.locals.username;
+        console.log(result);
+        res.json(result);
+    } catch (err) {
+        console.error(err);
     }
 });
 

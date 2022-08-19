@@ -1,6 +1,7 @@
 "use strict";
 
 const express = require("express");
+const verifyToken = require("../middlewares/auth");
 const Question = require("../models/questions");
 const User = require("../models/users");
 const router = express.Router();
@@ -59,11 +60,14 @@ router.get("/get-discuss", async (req, res, next) => {
 });
 
 // create new Question
-router.post("/create", async (req, res, next) => {
+router.post("/create", verifyToken, async (req, res, next) => {
     try {
+        // get current user id
+        const currentUser = await User.findOne({
+            username: res.locals.username,
+        });
         const newQuestion = await Question.create({
-            // current user id
-            writer: req.body._id,
+            writer: currentUser._id.toString(),
             questionType: req.body.questionType,
             subject: req.body.subject,
             prosTitle: req.body.prosTitle,
@@ -104,13 +108,14 @@ router
             console.error(err);
         }
     })
-    .put(async (req, res, next) => {
+    .put(verifyToken, async (req, res, next) => {
         try {
-            const result = await Question.findOneAndUpdate(
-                {
-                    _id: req.params.id,
-                },
-                {
+            const currentUser = await User.findOne({
+                username: res.locals.username,
+            });
+            const question = await Question.findOne({ _id: req.params.id });
+            if (question.writer === currentUser) {
+                const result = await question.update({
                     title: req.body.title,
                     prosTitle: req.body.prosTitle,
                     prosDesc: req.body.prosDesc,
@@ -118,10 +123,27 @@ router
                     consDesc: req.body.consDesc,
                     tags: req.body.tags,
                     issue: req.body.issue,
-                }
-            );
-            console.log(result);
-            res.json(result);
+                });
+                res.json(result);
+            } else {
+                console.log("banned");
+                res.json({ status: "fail" });
+            }
+
+            // const result = await Question.findOneAndUpdate(
+            //     {
+            //         _id: req.params.id,
+            //     },
+            //     {
+            //         title: req.body.title,
+            //         prosTitle: req.body.prosTitle,
+            //         prosDesc: req.body.prosDesc,
+            //         consTitle: req.body.consTitle,
+            //         consDesc: req.body.consDesc,
+            //         tags: req.body.tags,
+            //         issue: req.body.issue,
+            //     }
+            // );
         } catch (err) {
             console.error(err);
             res.json({ status: "fail" });
@@ -142,11 +164,14 @@ router
     });
 
 // like PATCH
-router.route("/like/:id").patch(async (req, res, next) => {
+router.route("/like/:id").patch(verifyToken, async (req, res, next) => {
+    const currentUser = await User.findOne({
+        username: res.locals.username,
+    });
     try {
         const result = await User.updateOne(
             {
-                _id: req.body.userId,
+                _id: currentUser._id.toString(),
             },
             { $push: { bookmark: req.params.id } }
         );
@@ -159,11 +184,14 @@ router.route("/like/:id").patch(async (req, res, next) => {
 });
 
 // unlike PATCH
-router.route("/unlike/:id").patch(async (req, res, next) => {
+router.route("/unlike/:id").patch(verifyToken, async (req, res, next) => {
+    const currentUser = await User.findOne({
+        username: res.locals.username,
+    });
     try {
         const result = await User.findOneAndUpdate(
             {
-                _id: req.body.userId,
+                _id: currentUser._id.toString(),
             },
             { $pull: { bookmark: req.params.id } }
         );
