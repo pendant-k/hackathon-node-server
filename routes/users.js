@@ -15,4 +15,30 @@ router.get("/check-name/:name", async (req, res, next) => {
     }
 });
 
+// create newUser
+router.post("/create", async (req, res, next) => {
+    const existUser = await User.findOne({ userId: req.body.userId });
+    if (existUser) {
+        console.log("Exist User : ");
+        console.log(existUser);
+        res.json({ status: "duplicated" });
+    } else {
+        try {
+            const newUser = await User.create({
+                name: req.body.name,
+                nickname: req.body.nickname,
+                email: req.body.email,
+                userId: req.body.userId,
+                password: req.body.password,
+                bookmark: [],
+            });
+            console.log("User created : ", newUser);
+            res.status(201).json(newUser);
+        } catch (err) {
+            console.error(err);
+            next(err);
+        }
+    }
+});
+
 module.exports = router;
