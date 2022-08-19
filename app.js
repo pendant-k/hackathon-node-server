@@ -9,6 +9,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const passport = require("passport");
 
 const connectDB = require("./config/dbConnect");
 
@@ -19,19 +20,31 @@ const commentsRouter = require("./routes/comments");
 const votesRouter = require("./routes/votes");
 const usersRouter = require("./routes/users");
 
+const expressSession = require("express-session")({
+    secret: "likelion10",
+    // session 다시 저장 허용
+    resave: false,
+    saveUninitialized: false,
+});
+
 // connect DB
-connectDB();
+출처: https: connectDB();
 
 const app = express();
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 3000;
 
 // express 내장 body-parser setting
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(expressSession);
 
 // cors setting
 app.use(cors({ origin: "*" }));
+
+// passport setting
+app.use(passport.initialize());
+app.use(passport.session());
 
 // connection test route
 // index path
